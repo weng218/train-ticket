@@ -10,8 +10,8 @@ import thunk from 'redux-thunk';
 export default createStore(
 	combineReducers(reducers),
 	{
-		from: 'Beijing',
-		to: 'Shanghai',
+		from: 'beijing',
+		to: 'shanghai',
 		isCitySelectorVisible: false,
 		currentSelectingLeftCity: false,
 		cityData: null,
