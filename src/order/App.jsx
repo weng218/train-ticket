@@ -5,11 +5,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Header from '../common/Header.jsx';
 import Detail from '../common/Detail.jsx';
-// import Account from './Account.jsx';
-// import Choose from './Choose.jsx';
-// import Passengers from './Passengers.jsx';
+import Account from './Account.jsx';
+import Choose from './Choose.jsx';
+import Passengers from './Passengers.jsx';
 import Ticket from './Ticket.jsx';
-// import Menu from './Menu.jsx';
+import Menu from './Menu.jsx';
 
 import './App.css';
 
@@ -81,6 +81,42 @@ function App(props) {
         dispatch(fetchInitial(url));
     }, [searchParsed, departStation, arriveStation, seatType, departDate]);
 
+    const passengersCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                createAdult,
+                createChild,
+                removePassenger,
+                updatePassenger,
+                showGenderMenu,
+                showFollowAdultMenu,
+                showTicketTypeMenu,
+            },
+            dispatch
+        );
+    }, []);
+
+    const menuCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                hideMenu,
+            },
+            dispatch
+        );
+    }, []);
+
+    const chooseCbs = useMemo(() => {
+        return bindActionCreators(
+            {
+                updatePassenger,
+            },
+            dispatch
+        );
+    }, []);
+
+    if (!searchParsed) {
+        return null;
+    }
 
      return (
         <div className="app">
@@ -105,10 +141,14 @@ function App(props) {
                 </Detail>
             </div>
             <Ticket price={price} type={seatType} />
-          
+            <Passengers passengers={passengers} {...passengersCbs} />
+            {passengers.length > 0 && (
+                <Choose passengers={passengers} {...chooseCbs} />
+            )}
+            <Account length={passengers.length} price={price} />
+            <Menu show={isMenuVisible} {...menu} {...menuCbs} />
         </div>
     );
-
 }
 
 export default connect(
